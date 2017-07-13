@@ -1,0 +1,57 @@
+1、网页生成过程：
+	·HTML转换成DOM
+	·CSS转换成CSSOM（CSS Object Model）
+	·结合DOM和CSSOM，生成一颗渲染树
+	·生成布局
+	·将布局绘制到屏幕上
+	·网页生成的过程中，至少会渲染一次，用户访问过程中，还会不断重新渲染（导致网页重新渲染的情况）：
+		·修改DOM
+		·修改样式表
+		·用户事件（比如鼠标悬停、页面滚动、输入框键入文字、改变窗口大小等）
+	·重新布局：重排，必然会导致重绘
+	·重绘：重新绘制
+
+	·提高网页性能，就是要降低“重排”和“重绘”的频率和成本，尽量减少触发重新渲染
+
+	·一般来说，样式的写操作之后，如果有下面这些属性的读操作，都会引发浏览器立即重新渲染。
+		·offsetTop/offsetLeft/offsetWidth/offsetHeight
+		·scrollTop/scrollLeft/scrollWidth/scrollHeight
+		·clientTop/clientLeft/clientWidth/clientHeight
+		·getComputedStyle()
+	·所以，从性能角度考虑，尽量不要把读操作和写操作，放在一个语句里面。
+		// bad
+		div.style.left = div.offsetLeft + 10 + "px";
+		div.style.top = div.offsetTop + 10 + "px";
+
+		// good
+		var left = div.offsetLeft;
+		var top  = div.offsetTop;
+		div.style.left = left + 10 + "px";
+		div.style.top = top + 10 + "px";
+
+	·一般的规则是：
+		·样式表越简单，重排和重绘就越快。
+		·重排和重绘的DOM元素层级越高，成本就越高。
+		·table元素的重排和重绘成本，要高于div元素
+
+2、304的缓存原理
+	服务器首先产生Etag，服务器可在稍后使用它来判断页面是否已经被修改，
+	客户端请求一个页面（A），服务器返回页面A，并在给A加上一个ETag,
+	客户端展现页面并缓存服务器返回的ETag。
+	客户端再次请求页面A时候，会将上次请求时服务器返回的ETag一起传递给服务器。服务器检查该ETag，并判断出
+	该页面自上次请求后还未修改，直接返回304和一个空的响应体。
+
+
+3、什么样的前端代码是好的
+	高复用低耦合，这样文件小，好维护，而且好扩展
+
+
+4、Mongodb和mysql的区别
+	MySQL是传统的关系型数据库，MongoDB则是非关系型数据库
+
+	mongodb以BSON结构（二进制）进行存储，对海量数据存储有着很明显的优势。
+
+	对比传统关系型数据库,NoSQL有着非常显著的性能和扩展性优势，与关系型数据库相比，MongoDB的优点有： ①弱一致性（最终一致），更能保证用户的访问速度： ②文档结构的存储方式，能够更便捷的获取数据。
+
+5、网络分层里七层模型
+	应用层：
